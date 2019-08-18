@@ -39,6 +39,9 @@ class Die():
     def is_locked(self):
         return self.lock
 
+    def reset(self):
+        self.__init__
+
 
 class Player():
 
@@ -179,6 +182,10 @@ while era <= MAX_ERAS:
         turn = 0
     else:
         turn += 1
+
+    # RESET THE DICE
+    for x in range(NUM_DICE):
+        dice[x].reset()
 
     # END IT NOW
     era = 4
