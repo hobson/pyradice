@@ -7,33 +7,6 @@ import random
 # 4 = Red
 # 5 = Purple
 
-# CREATE THE BOARD AREAS
-
-
-def create_pharaoh_track(num_players):
-    pharaoh_track = numpy.zeros((num_players, 13))
-    return pharaoh_track
-
-
-def create_nile_track(num_players):
-    nile_track = numpy.zeros((num_players, 13))
-    return nile_track
-
-
-def create_civilization_track(num_players):
-    civilization_track = numpy.zeros((num_players, 5))
-    return civilization_track
-
-
-def create_monument_area():
-
-    monument_area = numpy.zeros((5, 8))
-    return monument_area
-
-
-def is_valid_monument_location(monument_area, row, col):
-    return monument_area[row][col] == 0
-
 
 class Die():
 
@@ -96,6 +69,37 @@ class RaTrack():
         return self.position >= self.end
 
 
+class Board():
+
+    def __init__(self, num_players):
+        self.pharaoh_track = self.create_pharaoh_track(num_players)
+        self.nile_track = self.create_nile_track(num_players)
+        self.civilization_track = self.create_civilization_track(num_players)
+        self.monument_area = self.create_monument_area()
+        self.ra_track = RaTrack(num_players)
+
+    # CREATE THE BOARD AREAS
+
+    def create_pharaoh_track(self, num_players):
+        pharaoh_track = numpy.zeros((num_players, 13))
+        return pharaoh_track
+
+    def create_nile_track(self, num_players):
+        nile_track = numpy.zeros((num_players, 13))
+        return nile_track
+
+    def create_civilization_track(self, num_players):
+        civilization_track = numpy.zeros((num_players, 5))
+        return civilization_track
+
+    def create_monument_area(self):
+        monument_area = numpy.zeros((5, 8))
+        return monument_area
+
+    def is_valid_monument_location(self, monument_area, row, col):
+        return monument_area[row][col] == 0
+
+
 game_over = False
 num_players = 2
 MAX_ROLLS = 3
@@ -103,15 +107,12 @@ MAX_ERAS = 3
 NUM_DICE = 5
 dice = [None] * 5
 
+board = Board(num_players)
+
 player = []
 player.append(Player('blue'))
 player.append(Player('red'))
 
-pharaoh_track = create_pharaoh_track(num_players)
-nile_track = create_nile_track(num_players)
-civilization_track = create_civilization_track(num_players)
-monument_area = create_monument_area()
-ra_track = RaTrack(num_players)
 
 # Create dice
 for x in range(NUM_DICE):
@@ -147,7 +148,7 @@ while not era == MAX_ERAS:
     else:
         turn += 1
 
-    if ra_track.check_end():
+    if board.ra_track.check_end():
 
         if era == 3:
             # do final scoring
