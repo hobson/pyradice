@@ -83,24 +83,27 @@ class RaTrack():
 class Board():
 
     def __init__(self, num_players):
-        self.pharaoh_track = self.create_pharaoh_track(num_players)
-        self.nile_track = self.create_nile_track(num_players)
-        self.civilization_track = self.create_civilization_track(num_players)
+        self.num_players = num_players
+        self.pharaoh_track = self.create_pharaoh_track()
+        self.nile_track = self.create_nile_track()
+        self.civilization_track = self.create_civilization_track()
         self.monument_area = self.create_monument_area()
-        self.ra_track = RaTrack(num_players)
+        self.ra_track = RaTrack(self.num_players)
 
     # CREATE THE BOARD AREAS
 
-    def create_pharaoh_track(self, num_players):
-        pharaoh_track = numpy.zeros((num_players, 13))
+    def create_pharaoh_track(self):
+        # pharaoh_track = numpy.zeros((num_players, 13))
+        pharaoh_track = [0] * self.num_players
         return pharaoh_track
 
-    def create_nile_track(self, num_players):
-        nile_track = numpy.zeros((num_players, 13))
+    def create_nile_track(self):
+        # nile_track = numpy.zeros((num_players, 13))
+        nile_track = [0] * self.num_players
         return nile_track
 
-    def create_civilization_track(self, num_players):
-        civilization_track = numpy.zeros((num_players, 5))
+    def create_civilization_track(self):
+        civilization_track = numpy.zeros((self.num_players, 5))
         return civilization_track
 
     def create_monument_area(self):
@@ -117,6 +120,8 @@ class Board():
 
         print("Pharaoh Track")
         print(self.pharaoh_track)
+        # for player in range(self.num_players):
+        #     print(self.pharaoh_track[player])
         print()
 
         print("Nile Track")
@@ -134,7 +139,7 @@ class Board():
 
 game_over = False
 num_players = 2
-MAX_ROLLS = 3
+MAX_ROLLS = 1
 MAX_ERAS = 3
 NUM_DICE = 5
 dice = [None] * 5
@@ -159,15 +164,18 @@ while era <= MAX_ERAS:
 
     roll = 1
     while roll <= MAX_ROLLS:
+        print()
         print("Era is " + str(era))
+        print("Turn is " + str(turn))
         print("Roll is " + str(roll))
         # ROLL THE DICE
         for x in range(NUM_DICE):
             dice[x].roll()
 
         # print the dice
-        # for x in range(NUM_DICE):
-        #     print(dice[x].value)
+        for x in range(NUM_DICE):
+            print(dice[x].value + ' ', end='')
+        print()
         # Choose dice to lock, or stop
 
         # If stop, set roll to 4
@@ -176,6 +184,9 @@ while era <= MAX_ERAS:
         roll += 1
 
     # "Score" this turn
+    for x in range(NUM_DICE):
+        if dice[x].value == 'P':
+            board.pharaoh_track[0] += 1
 
     # Next player's turn
     if turn == num_players:
