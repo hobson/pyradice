@@ -68,6 +68,14 @@ class RaTrack():
     def check_end(self):
         return self.position >= self.end
 
+    def print_track(self):
+        for x in range(self.end):
+            if x == self.position:
+                print('X', end='')
+            else:
+                print('.', end='')
+        print()
+
 
 class Board():
 
@@ -99,6 +107,27 @@ class Board():
     def is_valid_monument_location(self, monument_area, row, col):
         return monument_area[row][col] == 0
 
+    def print_board(self):
+        print("Ra Track")
+        self.ra_track.print_track()
+        print()
+
+        print("Pharaoh Track")
+        print(self.pharaoh_track)
+        print()
+
+        print("Nile Track")
+        print(self.nile_track)
+        print()
+
+        print("Civ Track")
+        print(self.civilization_track)
+        print()
+
+        print("Monument Area")
+        print(self.monument_area)
+        print()
+
 
 game_over = False
 num_players = 2
@@ -121,18 +150,21 @@ for x in range(NUM_DICE):
 turn = 1
 era = 1
 
-while not era == MAX_ERAS:
+while era <= MAX_ERAS:
+
+    board.print_board()
 
     roll = 1
-    while roll < MAX_ROLLS:
-
+    while roll <= MAX_ROLLS:
+        print("Era is " + str(era))
+        print("Roll is " + str(roll))
         # ROLL THE DICE
         for x in range(NUM_DICE):
             dice[x].roll()
 
         # print the dice
-        for x in range(NUM_DICE):
-            print(dice[x].value)
+        # for x in range(NUM_DICE):
+        #     print(dice[x].value)
         # Choose dice to lock, or stop
 
         # If stop, set roll to 4
@@ -148,10 +180,12 @@ while not era == MAX_ERAS:
     else:
         turn += 1
 
-    if board.ra_track.check_end():
+    # END IT NOW
+    era = 4
+    # if board.ra_track.check_end():
 
-        if era == 3:
-            # do final scoring
-            pass
+    #     if era == 3:
+    #         # do final scoring
+    #         pass
 
-        era += 1
+    #     era += 1
