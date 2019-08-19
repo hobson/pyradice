@@ -90,6 +90,8 @@ class Board():
         self.civilization_track = self.create_civilization_track()
         self.monument_area = self.create_monument_area()
         self.ra_track = RaTrack(self.num_players)
+        self.PHARAOH_TRACK_MAX = 13
+        self.NILE_TRACK_MAX = 13
 
     # CREATE THE BOARD AREAS
 
@@ -123,13 +125,36 @@ class Board():
         print()
 
         print("Pharaoh Track")
-        print(self.pharaoh_track)
-        # for player in range(self.num_players):
-        #     print(self.pharaoh_track[player])
+        # print(self.pharaoh_track)
+        print('   ', end='')
+        for x in range(self.PHARAOH_TRACK_MAX+1):
+            print(str(x)[-1], end='')
+        print()
+        for player in range(self.num_players):
+            print('P' + str(player) + ' ', end='')
+            for x in range(self.PHARAOH_TRACK_MAX+1):
+                if x == self.pharaoh_track[player]:
+                    print('X', end='')
+                else:
+                    print('.', end='')
+            print()
         print()
 
         print("Nile Track")
-        print(self.nile_track)
+        # print(self.nile_track)
+        print('   ', end='')
+        for x in range(self.NILE_TRACK_MAX+1):
+            print(str(x)[-1], end='')
+        print()
+        for player in range(self.num_players):
+            print('P' + str(player) + ' ', end='')
+            for x in range(self.NILE_TRACK_MAX+1):
+                if x == self.nile_track[player][0]:
+                    print(str(self.nile_track[player][1]), end='')
+                else:
+                    print('.', end='')
+            print()
+
         print()
 
         print("Civ Track")
@@ -164,6 +189,10 @@ era = 1
 
 while era <= MAX_ERAS:
 
+    board.pharaoh_track[0] = 5  # TESTING
+    board.nile_track[0][0] = 5  # TESTING
+    board.nile_track[1][0] = 2  # TESTING
+    board.nile_track[1][1] = 1  # TESTING
     board.print_board()
 
     roll = 1
