@@ -86,6 +86,7 @@ class Board():
         self.num_players = num_players
         self.pharaoh_track = self.create_pharaoh_track()
         self.nile_track = self.create_nile_track()
+        self.nile_flood = self.create_nile_flood()
         self.civilization_track = self.create_civilization_track()
         self.monument_area = self.create_monument_area()
         self.ra_track = RaTrack(self.num_players)
@@ -93,14 +94,17 @@ class Board():
     # CREATE THE BOARD AREAS
 
     def create_pharaoh_track(self):
-        # pharaoh_track = numpy.zeros((num_players, 13))
         pharaoh_track = [0] * self.num_players
         return pharaoh_track
 
     def create_nile_track(self):
-        # nile_track = numpy.zeros((num_players, 13))
-        nile_track = [0] * self.num_players
+        # Each player: [ Distance on Nile Track, Number of Flood Cubes ]
+        nile_track = [x[:] for x in [[0] * 2] * self.num_players]
         return nile_track
+
+    def create_nile_flood(self):
+        nile_flood = [0] * self.num_players
+        return nile_flood
 
     def create_civilization_track(self):
         civilization_track = numpy.zeros((self.num_players, 5))
