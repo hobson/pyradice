@@ -56,7 +56,7 @@ class Player():
 class RaTrack():
 
     def __init__(self, num_players):
-        self.end = 13
+        self.END = 13
 
         if num_players == 4:
             self.position = 1
@@ -69,10 +69,13 @@ class RaTrack():
         self.position += steps
 
     def check_end(self):
-        return self.position >= self.end
+        return self.position >= self.END
 
     def print_track(self):
-        for x in range(self.end):
+        for x in range(self.END):
+            print(str(x)[-1], end='')
+        print()
+        for x in range(self.END):
             if x == self.position:
                 print('X', end='')
             else:
@@ -109,11 +112,11 @@ class Board():
         return nile_flood
 
     def create_civilization_track(self):
-        civilization_track = numpy.zeros((self.num_players, 5))
+        civilization_track = numpy.zeros((self.num_players, NUM_DICE))
         return civilization_track
 
     def create_monument_area(self):
-        monument_area = numpy.zeros((5, 8))
+        monument_area = numpy.zeros((NUM_DICE, 8))
         return monument_area
 
     def is_valid_monument_location(self, monument_area, row, col):
@@ -166,12 +169,22 @@ class Board():
         print()
 
 
+def print_dice(dice):
+    for x in range(NUM_DICE):
+        print(str(x) + ' ', end='')
+    print()
+
+    for x in range(NUM_DICE):
+        print(dice[x].value + ' ', end='')
+    print()
+
+
 game_over = False
 num_players = 2
 MAX_ROLLS = 1
 MAX_ERAS = 3
 NUM_DICE = 5
-dice = [None] * 5
+dice = [None] * NUM_DICE
 
 board = Board(num_players)
 
@@ -193,22 +206,20 @@ while era <= MAX_ERAS:
     board.nile_track[0][0] = 5  # TESTING
     board.nile_track[1][0] = 2  # TESTING
     board.nile_track[1][1] = 1  # TESTING
-    board.print_board()
 
     roll = 1
     while roll <= MAX_ROLLS:
         print()
-        print("Era is " + str(era))
-        print("Turn is " + str(turn))
-        print("Roll is " + str(roll))
+        print("Era: " + str(era) + " | Turn: " + str(turn) + " | Roll: " + str(roll))
+        print()
+        board.print_board()
+
         # ROLL THE DICE
         for x in range(NUM_DICE):
             dice[x].roll()
 
-        # print the dice
-        for x in range(NUM_DICE):
-            print(dice[x].value + ' ', end='')
-        print()
+        print_dice(dice)
+
         # Choose dice to lock, or stop
 
         # If stop, set roll to 4
