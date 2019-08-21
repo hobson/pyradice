@@ -2,18 +2,32 @@ import numpy
 import random
 import sys
 
-# 1 = Yellow
-# 2 = Green
-# 3 = Blue
-# 4 = Red
-# 5 = Purple
+from colorama import init, Fore, Back, Style
+import colorama
+colorama.init(autoreset=True)    # Colorama
 
 
 class Die():
 
-    def __init__(self):
+    def __init__(self, color):
+        self.color = color
+        self.fgcolor = colorama.Fore.WHITE
+        self.style = colorama.Style.BRIGHT
         self.value = ''
         self.locked = False
+
+        if self.color == 'yellow':
+            self.bgcolor = colorama.Back.YELLOW
+        elif self.color == 'green':
+            self.bgcolor = colorama.Back.GREEN
+        elif self.color == 'blue':
+            self.bgcolor = colorama.Back.BLUE
+        elif self.color == 'red':
+            self.bgcolor = colorama.Back.RED
+        elif self.color == 'purple':
+            self.bgcolor = colorama.Back.MAGENTA
+        else:
+            sys.exit('Invalid die color')
 
     def roll(self):
         if not self.is_locked():
@@ -42,8 +56,11 @@ class Die():
     def is_locked(self):
         return self.locked
 
+    def print_colored_value(self):
+        print(self.bgcolor + self.fgcolor + self.style + ' ' + self.value + ' ', end='')
+
     def reset(self):
-        self.__init__()
+        self.__init__(self.color)
 
 
 class Player():
@@ -183,18 +200,19 @@ class Board():
 def print_dice(dice):
     NUM_DICE = len(dice)
     for x in range(NUM_DICE):
-        print(str(x) + ' ', end='')
+        print(' ' + str(x) + '  ', end='')
     print()
 
     for x in range(NUM_DICE):
-        print(dice[x].value + ' ', end='')
+        dice[x].print_colored_value()
+        print(' ', end='')
     print()
 
     for x in range(NUM_DICE):
         if dice[x].is_locked():
-            print('*', end='')
+            print(' * ', end='')
         else:
-            print(' ', end='')
+            print('   ', end='')
         print(' ', end='')
     print()
 
@@ -226,8 +244,11 @@ NUM_PLAYERS = len(player)
 board = Board(NUM_PLAYERS)
 
 # Create dice
-for x in range(NUM_DICE):
-    dice[x] = Die()
+dice[0] = Die('yellow')
+dice[1] = Die('green')
+dice[2] = Die('blue')
+dice[3] = Die('red')
+dice[4] = Die('purple')
 
 player_turn = 0
 era = 1
