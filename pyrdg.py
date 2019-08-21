@@ -1,5 +1,6 @@
 import numpy
 import random
+import sys
 
 # 1 = Yellow
 # 2 = Green
@@ -59,11 +60,12 @@ class RaTrack():
         self.END = 13
 
         if num_players == 4:
-            self.position = 1
+            self.start_position = 0
         elif num_players == 3:
-            self.position = 4
+            self.start_position = 3
         else:
-            self.position = 7
+            self.start_position = 6
+        self.position = self.start_position
 
     def increment(self, steps=1):
         self.position += steps
@@ -73,7 +75,10 @@ class RaTrack():
 
     def print_track(self):
         for x in range(self.END):
-            print(str(x)[-1], end='')
+            if x == self.start_position:
+                print('*', end='')
+            else:
+                print(str(x)[-1], end='')
         print()
         for x in range(self.END):
             if x == self.position:
@@ -170,18 +175,35 @@ class Board():
 
 
 def print_dice(dice):
+    NUM_DICE = len(dice)
     for x in range(NUM_DICE):
         print(str(x) + ' ', end='')
     print()
 
     for x in range(NUM_DICE):
         print(dice[x].value + ' ', end='')
+
+    for x in range(NUM_DICE):
+        if dice[x].is_locked():
+            print('*', end='')
+        else:
+            print(' ', end='')
     print()
 
 
-game_over = False
+def turn_menu():
+    print()
+    print("Options:")
+    print("L[0,3] to lock dice 0 and 3")
+    print("R to roll again")
+    print("S to stop")
+    print()
+    return str(input("What would you like to do? ")).upper()
+
+
+# game_over = False
 num_players = 2
-MAX_ROLLS = 1
+MAX_ROLLS = 3
 MAX_ERAS = 3
 NUM_DICE = 5
 dice = [None] * NUM_DICE
@@ -197,21 +219,22 @@ player.append(Player('red'))
 for x in range(NUM_DICE):
     dice[x] = Die()
 
-turn = 1
+player_turn = 0
 era = 1
 
 while era <= MAX_ERAS:
 
-    board.pharaoh_track[0] = 5  # TESTING
-    board.nile_track[0][0] = 5  # TESTING
-    board.nile_track[1][0] = 2  # TESTING
-    board.nile_track[1][1] = 1  # TESTING
+    # board.pharaoh_track[0] = 5  # TESTING
+    # board.nile_track[0][0] = 5  # TESTING
+    # board.nile_track[1][0] = 2  # TESTING
+    # board.nile_track[1][1] = 1  # TESTING
 
     roll = 1
     while roll <= MAX_ROLLS:
         print()
-        print("Era: " + str(era) + " | Turn: " + str(turn) + " | Roll: " + str(roll))
-        print()
+        print('-'*80)
+        print("Era: " + str(era) + " | Player: " + str(player_turn) + " | Roll: " + str(roll))
+        print('-'*80)
         board.print_board()
 
         # ROLL THE DICE
@@ -221,29 +244,47 @@ while era <= MAX_ERAS:
         print_dice(dice)
 
         # Choose dice to lock, or stop
+        selection = turn_menu()
 
-        # If stop, set roll to 4
+        if selection[0] == 'L':
+            dice_to_lock = input("Which dice to lock? ")
+            lock_list = [int(s) for s in dice_to_lock.split(',')]
+            for x in range(NUM_DICE):
+                if x in lock_list:
+                    print('Locking ' + str(x))
+                    # dice[x].lock()
 
-        # Next roll
-        roll += 1
+        elif selection[0] == 'R':
+            # Next roll
+            roll += 1
+        elif selection[0] == 'S':
+            # If stop, set roll to 4
+            roll = 4
+        else:
+            print("Invalid option")
+            sys.exit
 
     # "Score" this turn
     for x in range(NUM_DICE):
         if dice[x].value == 'P':
-            board.pharaoh_track[0] += 1
+            board.pharaoh_track[player_turn] += 1
+        elif dice[x].value == 'N':
+            board.nile_track[player_turn][0] += 1
+        elif dice[x].value == 'R':
+            board.ra_track.increment()
 
     # Next player's turn
-    if turn == num_players:
-        turn = 0
+    if player_turn == num_players-1:
+        player_turn = 0
     else:
-        turn += 1
+        player_turn += 1
 
     # RESET THE DICE
     for x in range(NUM_DICE):
         dice[x].reset()
 
     # END IT NOW
-    era = 4
+    # era = 4
     # if board.ra_track.check_end():
 
     #     if era == 3:
