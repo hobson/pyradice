@@ -207,18 +207,19 @@ def turn_menu():
 
 
 # game_over = False
-num_players = 2
 MAX_ROLLS = 3
 MAX_ERAS = 3
 NUM_DICE = 5
 dice = [None] * NUM_DICE
 
-board = Board(num_players)
-
 player = []
 player.append(Player(0, 'blue'))
 player.append(Player(1, 'red'))
+# player.append(Player(2, 'green'))
+# player.append(Player(3, 'yellow'))
+NUM_PLAYERS = len(player)
 
+board = Board(NUM_PLAYERS)
 
 # Create dice
 for x in range(NUM_DICE):
@@ -240,7 +241,7 @@ while era <= MAX_ERAS:
         print()
         print('-'*80)
         print("Era: " + str(era) + " | Player: " + str(player_turn) + " | Roll: " + str(roll) + " | Scores: ", end='')
-        for x in range(num_players):
+        for x in range(NUM_PLAYERS):
             print('P' + str(x) + ':' + str(player[x].score) + ' ', end='')
         print()
         print('-'*80)
@@ -293,7 +294,7 @@ while era <= MAX_ERAS:
             board.ra_track.increment()
 
     # Next player's turn
-    if player_turn == num_players-1:
+    if player_turn == NUM_PLAYERS-1:
         player_turn = 0
     else:
         player_turn += 1
