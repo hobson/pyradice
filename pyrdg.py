@@ -196,7 +196,7 @@ def print_dice(dice):
 def turn_menu():
     print()
     print("Options:")
-    print("L[0,3] to lock dice 0 and 3")
+    print("L to lock dice")
     print("R to roll again")
     print("S to stop")
     print()
@@ -232,6 +232,7 @@ while era <= MAX_ERAS:
     # board.nile_track[1][1] = 1  # TESTING
 
     roll = 1
+    previous_roll = 0
     while roll <= MAX_ROLLS:
         print()
         print('-'*80)
@@ -240,8 +241,10 @@ while era <= MAX_ERAS:
         board.print_board()
 
         # ROLL THE DICE
-        for x in range(NUM_DICE):
-            dice[x].roll()
+        if roll != previous_roll:
+            previous_roll = roll
+            for x in range(NUM_DICE):
+                dice[x].roll()
 
         print_dice(dice)
 
