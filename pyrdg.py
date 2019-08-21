@@ -239,7 +239,10 @@ while era <= MAX_ERAS:
     while roll <= MAX_ROLLS:
         print()
         print('-'*80)
-        print("Era: " + str(era) + " | Player: " + str(player_turn) + " | Roll: " + str(roll) + " | Score: " + str(player[player_turn].score))
+        print("Era: " + str(era) + " | Player: " + str(player_turn) + " | Roll: " + str(roll) + " | Scores: ", end='')
+        for x in range(num_players):
+            print('P' + str(x) + ':' + str(player[x].score) + ' ', end='')
+        print()
         print('-'*80)
         board.print_board()
 
