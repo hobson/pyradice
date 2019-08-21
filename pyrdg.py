@@ -41,7 +41,7 @@ class Die():
         return self.locked
 
     def reset(self):
-        self.__init__
+        self.__init__()
 
 
 class Player():
