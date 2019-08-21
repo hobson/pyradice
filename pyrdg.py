@@ -60,6 +60,7 @@ class RaTrack():
 
     def __init__(self, num_players):
         self.END = 13
+        self.NUM_PLAYERS = num_players
 
         if num_players == 4:
             self.start_position = 0
@@ -88,6 +89,9 @@ class RaTrack():
             else:
                 print('.', end='')
         print()
+
+    def reset(self):
+        self.__init__(self.NUM_PLAYERS)
 
 
 class Board():
@@ -278,8 +282,8 @@ while era <= MAX_ERAS:
             # Next roll
             roll += 1
         elif selection[0] == 'S':
-            # If stop, set roll to 4
-            roll = 4
+            # If stop, set roll above the max
+            roll = MAX_ROLLS + 1
         else:
             print("Invalid option")
             sys.exit
@@ -303,12 +307,7 @@ while era <= MAX_ERAS:
     for x in range(NUM_DICE):
         dice[x].reset()
 
-    # END IT NOW
-    # era = 4
-    # if board.ra_track.check_end():
-
-    #     if era == 3:
-    #         # do final scoring
-    #         pass
-
-    #     era += 1
+    # Check for end of Era
+    if board.ra_track.check_end():
+        board.ra_track.reset()
+        era += 1
