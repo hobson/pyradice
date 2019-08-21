@@ -30,12 +30,14 @@ class Die():
                 self.value = 'A'  # Ankh
             else:
                 self.value = 'R'  # Ra
+                self.lock()
 
     def lock(self):
         self.locked = True
 
     def unlock(self):
-        self.locked = False
+        if self.value != 'R':
+            self.locked = False
 
     def is_locked(self):
         return self.locked
