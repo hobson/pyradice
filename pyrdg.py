@@ -48,9 +48,9 @@ class Die():
 
 class Player():
 
-    def __init__(self, color):
+    def __init__(self, turn_order, color):
         self.color = color
-        self.score = 0
+        self.score = 10 + turn_order
 
     # def get_color():
     #     return self.color
@@ -216,8 +216,8 @@ dice = [None] * NUM_DICE
 board = Board(num_players)
 
 player = []
-player.append(Player('blue'))
-player.append(Player('red'))
+player.append(Player(0, 'blue'))
+player.append(Player(1, 'red'))
 
 
 # Create dice
@@ -239,7 +239,7 @@ while era <= MAX_ERAS:
     while roll <= MAX_ROLLS:
         print()
         print('-'*80)
-        print("Era: " + str(era) + " | Player: " + str(player_turn) + " | Roll: " + str(roll))
+        print("Era: " + str(era) + " | Player: " + str(player_turn) + " | Roll: " + str(roll) + " | Score: " + str(player[player_turn].score))
         print('-'*80)
         board.print_board()
 
