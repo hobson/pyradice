@@ -62,9 +62,9 @@ class RaTrack():
         self.END = 13
         self.NUM_PLAYERS = num_players
 
-        if num_players == 4:
+        if self.NUM_PLAYERS == 4:
             self.start_position = 0
-        elif num_players == 3:
+        elif self.NUM_PLAYERS == 3:
             self.start_position = 3
         else:
             self.start_position = 6
@@ -286,9 +286,13 @@ while era <= MAX_ERAS:
             roll = MAX_ROLLS + 1
         else:
             print("Invalid option")
-            sys.exit
 
     # "Score" this turn
+    # Count the dice values
+    for value in ['P', 'N', 'C', 'M', 'A', 'R']:
+        quantity = sum(1 for d in dice if d.value == value)
+        print(value + ': ' + str(quantity))
+
     for x in range(NUM_DICE):
         if dice[x].value == 'P':
             board.pharaoh_track[player_turn] += 1
@@ -310,4 +314,8 @@ while era <= MAX_ERAS:
     # Check for end of Era
     if board.ra_track.check_end():
         board.ra_track.reset()
+
+        # End of era-scoring
+
+        # Swtch to next era
         era += 1
