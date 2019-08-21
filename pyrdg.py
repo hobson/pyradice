@@ -197,6 +197,7 @@ def turn_menu():
     print()
     print("Options:")
     print("L to lock dice")
+    print("U to unlock dice")
     print("R to roll again")
     print("S to stop")
     print()
@@ -258,6 +259,14 @@ while era <= MAX_ERAS:
                 if x in lock_list:
                     print('Locking ' + str(x))
                     dice[x].lock()
+
+        elif selection[0] == 'U':
+            dice_to_unlock = input("Which dice to unlock? ")
+            unlock_list = [int(s) for s in dice_to_unlock.split(',')]
+            for x in range(NUM_DICE):
+                if x in unlock_list:
+                    print('Unlocking ' + str(x))
+                    dice[x].unlock()
 
         elif selection[0] == 'R':
             # Next roll
