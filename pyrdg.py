@@ -13,7 +13,7 @@ class Die():
 
     def __init__(self):
         self.value = ''
-        self.lock = False
+        self.locked = False
 
     def roll(self):
         if not self.is_locked():
@@ -32,13 +32,13 @@ class Die():
                 self.value = 'R'  # Ra
 
     def lock(self):
-        self.lock = True
+        self.locked = True
 
     def unlock(self):
-        self.lock = False
+        self.locked = False
 
     def is_locked(self):
-        return self.lock
+        return self.locked
 
     def reset(self):
         self.__init__
@@ -182,12 +182,14 @@ def print_dice(dice):
 
     for x in range(NUM_DICE):
         print(dice[x].value + ' ', end='')
+    print()
 
     for x in range(NUM_DICE):
         if dice[x].is_locked():
             print('*', end='')
         else:
             print(' ', end='')
+        print(' ', end='')
     print()
 
 
@@ -252,7 +254,7 @@ while era <= MAX_ERAS:
             for x in range(NUM_DICE):
                 if x in lock_list:
                     print('Locking ' + str(x))
-                    # dice[x].lock()
+                    dice[x].lock()
 
         elif selection[0] == 'R':
             # Next roll
