@@ -304,13 +304,36 @@ while era <= MAX_ERAS:
         quantity = sum(1 for d in dice if d.value == value)
         print(value + ': ' + str(quantity))
 
-    for x in range(NUM_DICE):
-        if dice[x].value == 'P':
-            board.pharaoh_track[player_turn] += 1
-        elif dice[x].value == 'N':
-            board.nile_track[player_turn][0] += 1
-        elif dice[x].value == 'R':
-            board.ra_track.increment()
+    # for x in range(NUM_DICE):
+    #     if dice[x].value == 'P':
+    #         board.pharaoh_track[player_turn] += 1
+    #     elif dice[x].value == 'N':
+    #         board.nile_track[player_turn][0] += 1
+    #     elif dice[x].value == 'R':
+    #         board.ra_track.increment()
+
+    while True:
+        invalid_response_count = 0
+        chosen_values = []
+        ptrackdice = list(input('Which dice would you like to use on the Pharaoh track? ').split(","))
+        for x in ptrackdice:
+            face_value = dice[int(x)].value
+            if face_value not in ['P', 'A']:
+                invalid_response_count += 1
+                print('Invalid response ' + str(x) + ' (' + face_value + '}')
+            else:
+                chosen_values.append(dice[int(x)].value)
+        print(chosen_values)
+        countp = sum(1 for c in chosen_values if c == 'P')
+        if countp == 0:
+            print('At least one chosen die must be Pharaoh!')
+            invalid_response_count += 1
+        if invalid_response_count == 0:
+            break
+
+    psum = len(chosen_values)
+    # print(psum)
+    board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
 
     # Next player's turn
     if player_turn == NUM_PLAYERS-1:
