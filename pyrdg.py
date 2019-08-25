@@ -15,6 +15,7 @@ class Die():
         self.style = colorama.Style.BRIGHT
         self.value = ''
         self.locked = False
+        self.POSSIBLE_DICE_VALUE = ['P', 'N', 'C', 'M', 'A', 'R']  # Pharaoh, Nile, Civilization, Monument, Ankh, Ra
 
         if self.color == 'yellow':
             self.bgcolor = colorama.Back.YELLOW
@@ -31,19 +32,8 @@ class Die():
 
     def roll(self):
         if not self.is_locked():
-            roll = random.randint(1, 6)
-            if roll == 1:
-                self.value = 'P'  # Pharaoh
-            elif roll == 2:
-                self.value = 'N'  # Nile
-            elif roll == 3:
-                self.value = 'C'  # Civilization
-            elif roll == 4:
-                self.value = 'M'  # Monument
-            elif roll == 5:
-                self.value = 'A'  # Ankh
-            else:
-                self.value = 'R'  # Ra
+            self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
+            if self.value == 'R':
                 self.lock()
 
     def lock(self):
