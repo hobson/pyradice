@@ -34,7 +34,7 @@ class Die():
     def roll(self):
         if not self.is_locked():
             self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
-            self.value = 'N'
+            self.value = 'C'
             if self.value == 'R':
                 self.lock()
                 self.available = False
@@ -428,7 +428,62 @@ while era <= MAX_ERAS:
     board.nile_track[player_turn][0] = min(board.NILE_TRACK_MAX, board.nile_track[player_turn][0] + nsum)
     ########## END NILE TRACK ##########
 
+    ########## DECIDE FOR CIV TRACK ##########
     print_dice(dice)
+    while True:
+        invalid_response_count = 0
+        chosen_values = []
+        ctrackdice = list(filter(None, input('Which dice would you like to use on the Civ track? ').split(",")))
+        if len(ctrackdice) != 0:
+            for x in ctrackdice:
+                face_value = dice[int(x)].value
+                if face_value not in ['C', 'A']:
+                    invalid_response_count += 1
+                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                else:
+                    chosen_values.append(dice[int(x)].value)
+            # print(chosen_values)
+            countc = sum(1 for c in chosen_values if c == 'C')
+            countc_all = sum(1 for c in chosen_values if c in ['C','A'])
+            if countc == 0:
+                print('At least one chosen die must be Civ!')
+                invalid_response_count += 1
+            if countc_all < 3:
+                print('You must pick at least 3 dice when choosing Civs!')
+                invalid_response_count += 1
+        if invalid_response_count == 0:
+            break
+
+    civs_to_place = len(ctrackdice) - 2
+
+    while True:
+        invalid_response_count = 0
+        chosen_values = []
+        c2trackdice = list(filter(None, input('Which civs would you like to place? ').split(",")))
+        if len(c2trackdice) != 0:
+            for x in c2trackdice:
+                face_value = dice[int(x)].value
+                if face_value not in ['C']:
+                    invalid_response_count += 1
+                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                else:
+                    chosen_values.append(dice[int(x)].value)
+            # print(chosen_values)
+            countc = sum(1 for c in chosen_values if c == 'C')
+            if countc < civs_to_place:
+                print('You only chose ' + str(countc) + '/' + str(civs_to_place) + ' dice.')
+                invalid_response_count += 1
+            elif countc > civs_to_place:
+                print('Too many! You chose ' + str(countc) + ' dice but are only allowed ' + str(civs_to_place) + '.')
+                invalid_response_count += 1
+        if invalid_response_count == 0:
+            break
+
+    for x in ctrackdice:
+        dice[int(x)].use()
+        if x in c2trackdice:
+            board.civilization_track[player_turn][int(x)] = 1
+    ########## END CIV TRACK ##########
 
     # Next player's turn
     if player_turn == NUM_PLAYERS-1:
