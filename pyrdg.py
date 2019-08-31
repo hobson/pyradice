@@ -317,25 +317,51 @@ while era <= MAX_ERAS:
         invalid_response_count = 0
         chosen_values = []
         ptrackdice = list(filter(None, input('Which dice would you like to use on the Pharaoh track? ').split(",")))
-        # if len(ptrackdice) != 0:
-        for x in ptrackdice:
-            face_value = dice[int(x)].value
-            if face_value not in ['P', 'A']:
+        if len(ptrackdice) != 0:
+            for x in ptrackdice:
+                face_value = dice[int(x)].value
+                if face_value not in ['P', 'A']:
+                    invalid_response_count += 1
+                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                else:
+                    chosen_values.append(dice[int(x)].value)
+            print(chosen_values)
+            countp = sum(1 for c in chosen_values if c == 'P')
+            if countp == 0:
+                print('At least one chosen die must be Pharaoh!')
                 invalid_response_count += 1
-                print('Invalid response ' + str(x) + ' (' + face_value + '}')
-            else:
-                chosen_values.append(dice[int(x)].value)
-        print(chosen_values)
-        countp = sum(1 for c in chosen_values if c == 'P')
-        if countp == 0:
-            print('At least one chosen die must be Pharaoh!')
-            invalid_response_count += 1
         if invalid_response_count == 0:
             break
 
         psum = len(chosen_values)
         # print(psum)
         board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
+
+    # DECIDE FOR NILE TRACK
+    while True:
+        invalid_response_count = 0
+        chosen_values = []
+        ntrackdice = list(filter(None, input('Which dice would you like to use on the Nile track? ').split(",")))
+        if len(ntrackdice) != 0:
+            for x in ntrackdice:
+                face_value = dice[int(x)].value
+                if face_value not in ['N', 'A']:
+                    invalid_response_count += 1
+                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                else:
+                    chosen_values.append(dice[int(x)].value)
+            print(chosen_values)
+            countn = sum(1 for c in chosen_values if c == 'N')
+            if countn == 0:
+                print('At least one chosen die must be Nile!')
+                invalid_response_count += 1
+        if invalid_response_count == 0:
+            break
+
+        nsum = len(chosen_values)
+        # print(psum)
+        board.nile_track[player_turn][0] = min(board.NILE_TRACK_MAX, board.nile_track[player_turn][0] + nsum)
+
 
     # Next player's turn
     if player_turn == NUM_PLAYERS-1:
