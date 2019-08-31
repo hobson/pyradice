@@ -55,6 +55,9 @@ class Die():
     def is_available(self):
         return self.available
 
+    def format(self):
+            return self.fgcolor + self.bgcolor + self.style
+
     def print_colored_value(self):
         print(self.bgcolor + self.fgcolor + self.style + ' ' + self.value + ' ', end='')
 
@@ -188,7 +191,12 @@ class Board():
         print()
 
         print("Civ Track")
-        print(self.civilization_track)
+        for player in range(self.num_players):
+            print('P' + str(player) + ' ', end='')
+            for x in range(NUM_DICE):
+                print(dice[int(x)].format() + ' ' + str(int(self.civilization_track[player][x])) + ' ', end='')
+            print()
+
         print()
 
         print("Monument Area")
@@ -459,7 +467,7 @@ while era <= MAX_ERAS:
     while True:
         invalid_response_count = 0
         chosen_values = []
-        c2trackdice = list(filter(None, input('Which civs would you like to place? ').split(",")))
+        c2trackdice = list(filter(None, input('Which ' + str(civs_to_place) + ' civ(s) would you like to place? ').split(",")))
         if len(c2trackdice) != 0:
             for x in c2trackdice:
                 face_value = dice[int(x)].value
