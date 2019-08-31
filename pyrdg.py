@@ -34,6 +34,7 @@ class Die():
     def roll(self):
         if not self.is_locked():
             self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
+            self.value = 'N'
             if self.value == 'R':
                 self.lock()
                 self.available = False
@@ -227,6 +228,21 @@ def turn_menu():
     print()
     return str(input("What would you like to do? ")).upper()
 
+# def yes_or_no(question):
+#     check = str(input(question + " (Y/N): ")).lower().strip()
+#     try:
+#         if check[0] == 'y':
+#             return True
+#         elif check[0] == 'n':
+#             return False
+#         else:
+#             print('Invalid Input')
+#             return yes_or_no(question)
+#     except Exception as error:
+#         print("Please enter valid inputs!")
+#         print(error)
+#         return yes_or_no(question)
+
 
 # game_over = False
 MAX_ROLLS = 3
@@ -349,6 +365,41 @@ while era <= MAX_ERAS:
     board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
     ########## END PHARAOH TRACK ##########
 
+    ########## DECIDE FOR NILE FLOOD ##########
+    print_dice(dice)
+
+    # if yes_or_no("Would you like to flood?"):
+    while True:
+        invalid_response_count = 0
+        chosen_values = []
+        flooddice = list(filter(None, input('Which dice would you like to use to flood? ').split(",")))
+        if len(flooddice) != 0:
+            for x in flooddice:
+                face_value = dice[int(x)].value
+                if face_value not in ['N', 'A']:
+                    invalid_response_count += 1
+                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                else:
+                    chosen_values.append(dice[int(x)].value)
+            # print(chosen_values)
+            countn = sum(1 for c in chosen_values if c == 'N')
+            countf = sum(1 for c in chosen_values if c in ['N','A'])
+            if countn == 0:
+                print('At least one chosen die must be Nile!')
+                invalid_response_count += 1
+            if countn != 3:
+                print('You must pick only 3 dice when flooding!')
+                invalid_response_count += 1
+        if invalid_response_count == 0:
+            break
+
+    fsum = len(chosen_values)
+    if fsum == 3:
+        for x in flooddice:
+            dice[int(x)].use()
+        board.nile_track[player_turn][1] += 1
+    ########## END NILE FLOOD ##########
+
     ########## DECIDE FOR NILE TRACK ##########
     print_dice(dice)
     while True:
@@ -376,6 +427,7 @@ while era <= MAX_ERAS:
         dice[int(x)].use()
     board.nile_track[player_turn][0] = min(board.NILE_TRACK_MAX, board.nile_track[player_turn][0] + nsum)
     ########## END NILE TRACK ##########
+
     print_dice(dice)
 
     # Next player's turn
