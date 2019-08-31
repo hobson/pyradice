@@ -15,6 +15,7 @@ class Die():
         self.style = colorama.Style.BRIGHT
         self.value = ''
         self.locked = False
+        self.available = True
         self.POSSIBLE_DICE_VALUE = ['P', 'N', 'C', 'M', 'A', 'R']  # Pharaoh, Nile, Civilization, Monument, Ankh, Ra
 
         if self.color == 'yellow':
@@ -35,6 +36,7 @@ class Die():
             self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
             if self.value == 'R':
                 self.lock()
+                self.available = False
 
     def lock(self):
         self.locked = True
@@ -45,6 +47,12 @@ class Die():
 
     def is_locked(self):
         return self.locked
+
+    def use(self):
+        self.available = False
+
+    def is_available(self):
+        return self.available
 
     def print_colored_value(self):
         print(self.bgcolor + self.fgcolor + self.style + ' ' + self.value + ' ', end='')
@@ -201,6 +209,8 @@ def print_dice(dice):
     for x in range(NUM_DICE):
         if dice[x].is_locked():
             print(' * ', end='')
+        elif not dice[x].is_available():
+            print(' U ', end='')
         else:
             print('   ', end='')
         print(' ', end='')
@@ -325,7 +335,7 @@ while era <= MAX_ERAS:
                     print('Invalid response ' + str(x) + ' (' + face_value + '}')
                 else:
                     chosen_values.append(dice[int(x)].value)
-            print(chosen_values)
+            # print(chosen_values)
             countp = sum(1 for c in chosen_values if c == 'P')
             if countp == 0:
                 print('At least one chosen die must be Pharaoh!')
@@ -333,9 +343,12 @@ while era <= MAX_ERAS:
         if invalid_response_count == 0:
             break
 
-        psum = len(chosen_values)
-        # print(psum)
-        board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
+    psum = len(chosen_values)
+    for x in ptrackdice:
+        dice[int(x)].use()
+    board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
+
+    print_dice(dice)
 
     # DECIDE FOR NILE TRACK
     while True:
@@ -350,7 +363,7 @@ while era <= MAX_ERAS:
                     print('Invalid response ' + str(x) + ' (' + face_value + '}')
                 else:
                     chosen_values.append(dice[int(x)].value)
-            print(chosen_values)
+            # print(chosen_values)
             countn = sum(1 for c in chosen_values if c == 'N')
             if countn == 0:
                 print('At least one chosen die must be Nile!')
@@ -358,10 +371,12 @@ while era <= MAX_ERAS:
         if invalid_response_count == 0:
             break
 
-        nsum = len(chosen_values)
-        # print(psum)
-        board.nile_track[player_turn][0] = min(board.NILE_TRACK_MAX, board.nile_track[player_turn][0] + nsum)
+    nsum = len(chosen_values)
+    for x in ntrackdice:
+        dice[int(x)].use()
+    board.nile_track[player_turn][0] = min(board.NILE_TRACK_MAX, board.nile_track[player_turn][0] + nsum)
 
+    print_dice(dice)
 
     # Next player's turn
     if player_turn == NUM_PLAYERS-1:
