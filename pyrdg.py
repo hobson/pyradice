@@ -322,7 +322,7 @@ while era <= MAX_ERAS:
     #     elif dice[x].value == 'R':
     #         board.ra_track.increment()
 
-    # DECIDE FOR PHARAOH TRACK
+    ########## DECIDE FOR PHARAOH TRACK ##########
     while True:
         invalid_response_count = 0
         chosen_values = []
@@ -347,10 +347,10 @@ while era <= MAX_ERAS:
     for x in ptrackdice:
         dice[int(x)].use()
     board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
+    ########## END PHARAOH TRACK ##########
 
+    ########## DECIDE FOR NILE TRACK ##########
     print_dice(dice)
-
-    # DECIDE FOR NILE TRACK
     while True:
         invalid_response_count = 0
         chosen_values = []
@@ -375,7 +375,7 @@ while era <= MAX_ERAS:
     for x in ntrackdice:
         dice[int(x)].use()
     board.nile_track[player_turn][0] = min(board.NILE_TRACK_MAX, board.nile_track[player_turn][0] + nsum)
-
+    ########## END NILE TRACK ##########
     print_dice(dice)
 
     # Next player's turn
