@@ -312,10 +312,12 @@ while era <= MAX_ERAS:
     #     elif dice[x].value == 'R':
     #         board.ra_track.increment()
 
+    # DECIDE FOR PHARAOH TRACK
     while True:
         invalid_response_count = 0
         chosen_values = []
-        ptrackdice = list(input('Which dice would you like to use on the Pharaoh track? ').split(","))
+        ptrackdice = list(filter(None, input('Which dice would you like to use on the Pharaoh track? ').split(",")))
+        # if len(ptrackdice) != 0:
         for x in ptrackdice:
             face_value = dice[int(x)].value
             if face_value not in ['P', 'A']:
@@ -331,9 +333,9 @@ while era <= MAX_ERAS:
         if invalid_response_count == 0:
             break
 
-    psum = len(chosen_values)
-    # print(psum)
-    board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
+        psum = len(chosen_values)
+        # print(psum)
+        board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
 
     # Next player's turn
     if player_turn == NUM_PLAYERS-1:
