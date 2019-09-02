@@ -34,7 +34,7 @@ class Die():
     def roll(self):
         if not self.is_locked():
             self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
-            self.value = 'C'
+            self.value = 'N'
             if self.value == 'R':
                 self.lock()
                 self.available = False
@@ -435,27 +435,9 @@ while era <= MAX_ERAS:
 
     ########## DECIDE FOR NILE TRACK ##########
     print_dice(dice)
-    while True:
-        invalid_response_count = 0
-        chosen_values = []
-        ntrackdice = list(filter(None, input('Which dice would you like to use on the Nile track? ').split(",")))
-        if len(ntrackdice) != 0:
-            for x in ntrackdice:
-                face_value = dice[int(x)].value
-                if face_value not in ['N', 'A']:
-                    invalid_response_count += 1
-                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
-                else:
-                    chosen_values.append(dice[int(x)].value)
-            # print(chosen_values)
-            countn = sum(1 for c in chosen_values if c == 'N')
-            if countn == 0:
-                print('At least one chosen die must be Nile!')
-                invalid_response_count += 1
-        if invalid_response_count == 0:
-            break
 
-    nsum = len(chosen_values)
+    ntrackdice = select_from_available_dice('Which dice would you like to use on the Nile track? ', ['N','A'], ['N'])
+    nsum = len(ntrackdice)
     for x in ntrackdice:
         dice[int(x)].use()
     board.nile_track[player_turn][0] = min(board.NILE_TRACK_MAX, board.nile_track[player_turn][0] + nsum)
