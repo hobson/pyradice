@@ -336,7 +336,7 @@ while era <= MAX_ERAS:
     # Count the dice values
     for value in ['P', 'N', 'C', 'M', 'A', 'R']:
         quantity = sum(1 for d in dice if d.value == value)
-        print(value + ': ' + str(quantity))
+        # print(value + ': ' + str(quantity))
 
     # for x in range(NUM_DICE):
     #     if dice[x].value == 'P':
@@ -474,16 +474,20 @@ while era <= MAX_ERAS:
                 if face_value not in ['C']:
                     invalid_response_count += 1
                     print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                elif x not in ctrackdice:
+                    invalid_response_count += 1
+                    print('Invalid response: die ' + str(x) + ' was not in the civ list.')
                 else:
                     chosen_values.append(dice[int(x)].value)
             # print(chosen_values)
-            countc = sum(1 for c in chosen_values if c == 'C')
-            if countc < civs_to_place:
-                print('You only chose ' + str(countc) + '/' + str(civs_to_place) + ' dice.')
-                invalid_response_count += 1
-            elif countc > civs_to_place:
-                print('Too many! You chose ' + str(countc) + ' dice but are only allowed ' + str(civs_to_place) + '.')
-                invalid_response_count += 1
+            if invalid_response_count == 0:
+                countc = sum(1 for c in chosen_values if c == 'C')
+                if countc < civs_to_place:
+                    print('You only chose ' + str(countc) + '/' + str(civs_to_place) + ' dice.')
+                    invalid_response_count += 1
+                elif countc > civs_to_place:
+                    print('Too many! You chose ' + str(countc) + ' dice but are only allowed ' + str(civs_to_place) + '.')
+                    invalid_response_count += 1
         if invalid_response_count == 0:
             break
 
