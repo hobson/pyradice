@@ -34,7 +34,7 @@ class Die():
     def roll(self):
         if not self.is_locked():
             self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
-            self.value = 'P'
+            # self.value = 'P'
             if self.value == 'R':
                 self.lock()
                 self.available = False
