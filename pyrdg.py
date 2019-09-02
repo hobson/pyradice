@@ -255,6 +255,28 @@ def turn_menu():
 #         return yes_or_no(question)
 
 
+def select_from_available_dice(question, allowed_values, required_values):
+    while True:
+        invalid_response_count = 0
+        chosen_values = []
+        input_dice = list(filter(None, input(question).split(",")))
+        if len(input_dice) != 0:
+            for x in input_dice:
+                face_value = dice[int(x)].value
+                if face_value not in allowed_values:
+                    invalid_response_count += 1
+                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                else:
+                    chosen_values.append(dice[int(x)].value)
+            # print(chosen_values)
+            count = sum(1 for c in chosen_values if c in required_values)
+            if count == 0:
+                print('At least one chosen die must be in ' + str(required_values) + '!')
+                invalid_response_count += 1
+        if invalid_response_count == 0:
+            break
+    return input_dice
+
 # game_over = False
 MAX_ROLLS = 3
 MAX_ERAS = 3
@@ -441,30 +463,8 @@ while era <= MAX_ERAS:
 
     ########## DECIDE FOR CIV TRACK ##########
     print_dice(dice)
-    while True:
-        invalid_response_count = 0
-        chosen_values = []
-        ctrackdice = list(filter(None, input('Which dice would you like to use on the Civ track? ').split(",")))
-        if len(ctrackdice) != 0:
-            for x in ctrackdice:
-                face_value = dice[int(x)].value
-                if face_value not in ['C', 'A']:
-                    invalid_response_count += 1
-                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
-                else:
-                    chosen_values.append(dice[int(x)].value)
-            # print(chosen_values)
-            countc = sum(1 for c in chosen_values if c == 'C')
-            countc_all = sum(1 for c in chosen_values if c in ['C','A'])
-            if countc == 0:
-                print('At least one chosen die must be Civ!')
-                invalid_response_count += 1
-            if countc_all < 3:
-                print('You must pick at least 3 dice when choosing Civs!')
-                invalid_response_count += 1
-        if invalid_response_count == 0:
-            break
 
+    ctrackdice = select_from_available_dice('Which dice would you like to use on the Civ track? ', ['C','A'], ['C'])
     civs_to_place = len(ctrackdice) - 2
 
     while True:
