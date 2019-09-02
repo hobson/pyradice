@@ -534,9 +534,18 @@ while era <= MAX_ERAS:
                 elif countm > monuments_to_place:
                     print('Too many! You chose ' + str(countm) + ' dice but are only allowed ' + str(monuments_to_place) + '.')
                     invalid_response_count += 1
+
+        column_used_this_turn = []
+        for x in m2trackdice:
+            column = int(input('In what column would you like to place a ' + str(dice[int(x)].color) + ' monument? '))
+            if column in column_used_this_turn:
+                invalid_response_count += 1
+                print('You already used that column this turn.')
+                # TO DO: Even if this error occurs, it still continues.  But its time for bed.
+            else:
+                column_used_this_turn.append(int(column))
         if invalid_response_count == 0:
             break
-
 
     ########## END MONUMENT TRACK ##########
 
