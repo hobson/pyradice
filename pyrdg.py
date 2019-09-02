@@ -34,7 +34,7 @@ class Die():
     def roll(self):
         if not self.is_locked():
             self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
-            self.value = 'N'
+            self.value = 'P'
             if self.value == 'R':
                 self.lock()
                 self.available = False
@@ -372,27 +372,8 @@ while era <= MAX_ERAS:
     #         board.ra_track.increment()
 
     ########## DECIDE FOR PHARAOH TRACK ##########
-    while True:
-        invalid_response_count = 0
-        chosen_values = []
-        ptrackdice = list(filter(None, input('Which dice would you like to use on the Pharaoh track? ').split(",")))
-        if len(ptrackdice) != 0:
-            for x in ptrackdice:
-                face_value = dice[int(x)].value
-                if face_value not in ['P', 'A']:
-                    invalid_response_count += 1
-                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
-                else:
-                    chosen_values.append(dice[int(x)].value)
-            # print(chosen_values)
-            countp = sum(1 for c in chosen_values if c == 'P')
-            if countp == 0:
-                print('At least one chosen die must be Pharaoh!')
-                invalid_response_count += 1
-        if invalid_response_count == 0:
-            break
-
-    psum = len(chosen_values)
+    ptrackdice = select_from_available_dice('Which dice would you like to use on the Pharaoh track? ', ['P','A'], ['P'])
+    psum = len(ptrackdice)
     for x in ptrackdice:
         dice[int(x)].use()
     board.pharaoh_track[player_turn] = min(board.PHARAOH_TRACK_MAX, board.pharaoh_track[player_turn] + psum)
