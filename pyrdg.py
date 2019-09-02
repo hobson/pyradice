@@ -477,8 +477,19 @@ while era <= MAX_ERAS:
                 elif x not in ctrackdice:
                     invalid_response_count += 1
                     print('Invalid response: die ' + str(x) + ' was not in the civ list.')
+                elif board.civilization_track[player_turn][int(x)] == 1:
+                    invalid_response_count += 1
+                    print('You already have a civ in color ' + dice[int(x)].color + '.')
                 else:
-                    chosen_values.append(dice[int(x)].value)
+                    players_in_this_color = 0
+                    for p in range(NUM_PLAYERS):
+                        if board.civilization_track[p][int(x)] == 1:
+                            players_in_this_color += 1
+                    if players_in_this_color >= NUM_PLAYERS - 1:
+                        invalid_response_count += 1
+                        print('There are already the max number (' + str(NUM_PLAYERS - 1) + ') of civs in col0r ' + dice[int(x)].color + '.')
+                    else:
+                        chosen_values.append(dice[int(x)].value)
             # print(chosen_values)
             if invalid_response_count == 0:
                 countc = sum(1 for c in chosen_values if c == 'C')
