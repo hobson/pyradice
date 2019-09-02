@@ -234,7 +234,10 @@ def turn_menu():
     print("R to roll again")
     print("S to stop")
     print()
-    return str(input("What would you like to do? ")).upper()
+    option = ''
+    while option not in ['L','U','R','S']:
+        option = str(input("What would you like to do? ")).upper()
+    return option
 
 # def yes_or_no(question):
 #     check = str(input(question + " (Y/N): ")).lower().strip()
