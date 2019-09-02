@@ -146,7 +146,7 @@ class Board():
         return civilization_track
 
     def create_monument_area(self):
-        monument_area = numpy.zeros((NUM_DICE, 8))
+        monument_area = numpy.zeros((NUM_DICE, MONUMENT_COLUMNS))
         return monument_area
 
     def is_valid_monument_location(self, monument_area, row, col):
@@ -200,7 +200,17 @@ class Board():
         print()
 
         print("Monument Area")
-        print(self.monument_area)
+        # print(self.monument_area)
+        for x in range(0,  NUM_DICE):
+            for y in range(0, MONUMENT_COLUMNS):
+                # print(str(int(self.monument_area[x,y])), end='')
+                owner = int(self.monument_area[x,y])
+                if owner == 0:
+                    owner_text = ' '
+                else:
+                    owner_text = str(owner)
+                print(dice[int(x)].format() + '| ' + owner_text + ' ', end='')
+            print(dice[int(x)].format() + '|')
         print()
 
 
@@ -282,6 +292,7 @@ MAX_ROLLS = 3
 MAX_ERAS = 3
 NUM_DICE = 5
 dice = [None] * NUM_DICE
+MONUMENT_COLUMNS = 8
 
 player = []
 player.append(Player(0, 'blue'))
