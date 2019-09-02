@@ -34,7 +34,7 @@ class Die():
     def roll(self):
         if not self.is_locked():
             self.value = self.POSSIBLE_DICE_VALUE[random.randint(0, 5)]
-            # self.value = 'P'
+            self.value = 'M'
             if self.value == 'R':
                 self.lock()
                 self.available = False
@@ -441,7 +441,7 @@ while era <= MAX_ERAS:
     ctrackdice = select_from_available_dice('Which dice would you like to use on the Civ track? ', ['C','A'], ['C'])
     civs_to_place = len(ctrackdice) - 2
 
-    while True:
+    while True and civs_to_place > 0:
         invalid_response_count = 0
         chosen_values = []
         c2trackdice = list(filter(None, input('Which ' + str(civs_to_place) + ' civ(s) would you like to place? ').split(",")))
@@ -484,6 +484,61 @@ while era <= MAX_ERAS:
         if x in c2trackdice:
             board.civilization_track[player_turn][int(x)] = 1
     ########## END CIV TRACK ##########
+
+    ########## DECIDE FOR MONUMENT TRACK ##########
+    print_dice(dice)
+
+    mtrackdice = select_from_available_dice('Which dice would you like to use on the Monument track? ', ['M','A'], ['M'])
+    if len(mtrackdice) == 1:
+        monuments_to_place = 1
+    elif len(mtrackdice) == 3:
+        monuments_to_place = 2
+    elif len(mtrackdice) == 5:
+        monuments_to_place = 3
+    else:
+        print("invalid number of monument dice")
+        break
+
+    while True:
+        invalid_response_count = 0
+        chosen_values = []
+        m2trackdice = list(filter(None, input('Which ' + str(monuments_to_place) + ' monument(s) would you like to place? ').split(",")))
+        if len(m2trackdice) != 0:
+            for x in m2trackdice:
+                face_value = dice[int(x)].value
+                if face_value not in ['M']:
+                    invalid_response_count += 1
+                    print('Invalid response ' + str(x) + ' (' + face_value + '}')
+                elif x not in mtrackdice:
+                    invalid_response_count += 1
+                    print('Invalid response: die ' + str(x) + ' was not in the monument list.')
+                # elif board.civilization_track[player_turn][int(x)] == 1:
+                #     invalid_response_count += 1
+                #     print('You already have a civ in color ' + dice[int(x)].color + '.')
+                # else:
+                #     players_in_this_color = 0
+                #     for p in range(NUM_PLAYERS):
+                #         if board.civilization_track[p][int(x)] == 1:
+                #             players_in_this_color += 1
+                #     if players_in_this_color >= NUM_PLAYERS - 1:
+                #         invalid_response_count += 1
+                #         print('There are already the max number (' + str(NUM_PLAYERS - 1) + ') of civs in col0r ' + dice[int(x)].color + '.')
+                else:
+                    chosen_values.append(dice[int(x)].value)
+            # print(chosen_values)
+            if invalid_response_count == 0:
+                countm = sum(1 for c in chosen_values if c == 'M')
+                if countm < monuments_to_place:
+                    print('You only chose ' + str(countm) + '/' + str(monuments_to_place) + ' dice.')
+                    invalid_response_count += 1
+                elif countm > monuments_to_place:
+                    print('Too many! You chose ' + str(countm) + ' dice but are only allowed ' + str(monuments_to_place) + '.')
+                    invalid_response_count += 1
+        if invalid_response_count == 0:
+            break
+
+
+    ########## END MONUMENT TRACK ##########
 
     # Next player's turn
     if player_turn == NUM_PLAYERS-1:
